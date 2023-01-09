@@ -4,7 +4,7 @@ class ButtonBlue extends StatelessWidget {
   const ButtonBlue({super.key, required this.label, required this.onPressed});
 
   final String label;
-  final void Function() onPressed;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +17,7 @@ class ButtonBlue extends StatelessWidget {
       margin: EdgeInsets.only(top: size.height * 0.02),
       child: MaterialButton(
         color: Colors.blue,
+        disabledColor: Colors.grey,
         elevation: 2,
         highlightElevation: 5,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

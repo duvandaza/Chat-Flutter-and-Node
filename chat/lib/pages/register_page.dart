@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quickalert/quickalert.dart';
+import '../services/auth_service.dart';
 import '../widgets/widgets.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -51,13 +54,15 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
 
+    final authService = Provider.of<AuthService>(context);
+
     return Column(
       children: [
         CustomInput(
           icon: Icons.person_outline,
           keyboardType: TextInputType.name,
           placeholder: 'Nombre',
-          textController: emailCtrl,
+          textController: nameCtrl,
         ),
         CustomInput(
           icon: Icons.email_outlined,
@@ -73,8 +78,22 @@ class __FormState extends State<_Form> {
           isPassword: true,
         ),
         ButtonBlue(
-          label: 'Ingresar',
-          onPressed: (){},
+          label: 'Crear cuenta',
+          onPressed: authService.autenticando ? null : () async{
+            
+            FocusScope.of(context).unfocus();
+            final registerOk = await authService.register(nameCtrl.text.trim(), emailCtrl.text.trim(), passwordCtrl.text.trim());
+            if(registerOk == true){
+              Navigator.pushReplacementNamed( context, 'usuarios');
+            }else{
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.error,
+                title: 'error',
+                text: registerOk.toString()
+              );
+            }
+          },
         ),
       ],
     );

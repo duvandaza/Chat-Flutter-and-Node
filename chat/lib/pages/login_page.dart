@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:chat/services/auth_service.dart';
+import 'package:quickalert/quickalert.dart';
+
 import '../widgets/widgets.dart';
 
 class LoginPage extends StatelessWidget {
@@ -50,6 +55,8 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
 
+    final authService = Provider.of<AuthService>(context);
+
     return Column(
       children: [
         CustomInput(
@@ -67,7 +74,23 @@ class __FormState extends State<_Form> {
         ),
         ButtonBlue(
           label: 'Ingresar',
-          onPressed: (){},
+          onPressed: authService.autenticando ? null : () async{
+            FocusScope.of(context).unfocus();
+
+            final loginOk = await authService.login(emailCtrl.text.trim(), passwordCtrl.text.trim());
+
+            if(loginOk) {
+              // TODO: Conectar a nuesto socket server
+              Navigator.pushReplacementNamed( context, 'usuarios');
+            }else{
+              QuickAlert.show(
+                context: context,
+                type: QuickAlertType.error,
+                title: 'error',
+                text: 'Revise sus credenciales nuevamente'
+              );
+            }
+          },
         ),
       ],
     );
