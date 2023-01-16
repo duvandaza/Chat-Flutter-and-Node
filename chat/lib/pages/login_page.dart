@@ -1,3 +1,4 @@
+import 'package:chat/services/socket_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,6 +57,7 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
 
     return Column(
       children: [
@@ -80,7 +82,7 @@ class __FormState extends State<_Form> {
             final loginOk = await authService.login(emailCtrl.text.trim(), passwordCtrl.text.trim());
 
             if(loginOk) {
-              // TODO: Conectar a nuesto socket server
+              socketService.connect();
               Navigator.pushReplacementNamed( context, 'usuarios');
             }else{
               QuickAlert.show(
